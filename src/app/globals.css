@@ -4,6 +4,10 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background-image: url("../../public/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 @layer base {
@@ -60,6 +64,24 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+/* Per Webkit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 8px; /* Larghezza della scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(30 41 59); /* Colore del pollice */
+  border-radius: 4px; /* Angoli arrotondati */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(24, 33, 47); /* Colore al passaggio del mouse */
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(52, 71, 102); /* Colore dello sfondo della scrollbar */
 }
 
 @layer base {

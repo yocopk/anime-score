@@ -1,0 +1,110 @@
+// app/anime/[id]/page.tsx
+import { getAnimeDetails } from "@/actions/get-anime";
+import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import AnimeRating from "@/components/AnimeRating";
+
+interface AnimePage {
+  params: { id: string };
+}
+
+export default async function AnimePage({ params }: AnimePage) {
+  const { id } = await params;
+  const animeId = Number(id);
+  const { data: anime, error } = await getAnimeDetails(animeId);
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-4">
+        <p className="text-red-500">{error}</p>
+        <Link href="/">
+          <Button variant="link">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Torna alla ricerca
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto p-4 pt-20">
+      <Link href="/">
+        <Button variant="link" className="mb-4">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Torna alla ricerca
+        </Button>
+      </Link>
+      <div className="max-w-6xl mx-auto grid grid-cols-2">
+        <Card>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="relative h-[400px] w-full">
+                <Image
+                  src={anime.images.jpg.large_image_url}
+                  alt={anime.title}
+                  fill
+                  className="object-cover rounded-lg"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  priority
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <h1 className="text-3xl font-bold mb-2">{anime.title}</h1>
+                {anime.title_japanese && (
+                  <h2 className="text-xl text-muted-foreground mb-4">
+                    {anime.title_japanese}
+                  </h2>
+                )}
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Punteggio</p>
+                    <p className="font-medium">{anime.score || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Anno</p>
+                    <p className="font-medium">{anime.year || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Episodi</p>
+                    <p className="font-medium">{anime.episodes || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Stato</p>
+                    <p className="font-medium">{anime.status}</p>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">Sinossi</h3>
+                  <p className="text-muted-foreground line-clamp-5">
+                    {anime.synopsis}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {anime.genres?.map(
+                    (genre: { mal_id: number; name: string }) => (
+                      <span
+                        key={genre.mal_id}
+                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                      >
+                        {genre.name}
+                      </span>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <AnimeRating animeId={animeId} />
+      </div>
+    </div>
+  );
+}
