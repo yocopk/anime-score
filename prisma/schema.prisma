@@ -39,6 +39,7 @@ model Rating {
   animation   Float    @default(0.0) // Voto per l'animazione
   characters  Float    @default(0.0) // Voto per i personaggi
   dialogues   Float    @default(0.0) // Voto per i dialoghi
+  soundtrack  Float    @default(0.0) // Voto per la colonna sonora
   overall     Float    @default(0.0) // Media finale
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
