@@ -12,13 +12,13 @@ import AnimeSearch from "./AnimeSearch";
 export default function Navbar() {
   return (
     <div className="container mx-auto flex justify-between items-center fixed bg-gray-800/70 p-4 text-white z-10">
-      <h1 className="text-2xl font-bold">Anime Ratings</h1>
+      <h1 className="text-2xl font-bold">AnimeHunt</h1>
       <AnimeSearch />
       <div className="flex gap-4 items-center font-bold">
         <Link className="hover:text-slate-400" href="/">
           Home
         </Link>
-        <Link className="hover:text-slate-400" href="/anime">
+        <Link className="hover:text-slate-400" href="/anime/archive">
           Anime
         </Link>
         <Link className="hover:text-slate-400" href="/user/my-ratings">
