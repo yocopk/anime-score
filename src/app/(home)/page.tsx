@@ -132,24 +132,18 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col items-center mt-20">
-          <h1 className="text-3xl font-bold mb-4 dark:text-white">
-            Anime Ratings
-          </h1>
-          <p className="text-center dark:text-gray-300">
-            Welcome to Anime Ratings! This is a simple app to search for anime
-            and rate them. You can also see the ratings of other users.
-          </p>
-          <Button variant="secondary" className="mt-4">
-            Get started
-          </Button>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-bold mt-8 mb-4 dark:text-white">
-            Featured Animes
-          </h2>
+      <div className="max-w-6xl mx-auto mt-20">
+        <div className="bg-slate-800/60 rounded-xl p-5">
+          <div className="flex items-center justify-center gap-3 mb-5 py-3">
+            <h2 className="text-2xl font-bold text-white dark:text-white">
+              Featured Animes
+            </h2>
+            {showMore && (
+              <Button variant="default" onClick={() => setShowMore(false)}>
+                Mostra meno
+              </Button>
+            )}
+          </div>
 
           {isLoading && (
             <div className="flex justify-center items-center min-h-[200px]">
@@ -164,18 +158,18 @@ export default function HomePage() {
               {renderRecommendationCards()}
             </div>
           )}
+          {!showMore && (
+            <div className="flex justify-center w-full">
+              <Button
+                variant="default"
+                onClick={() => setShowMore(true)}
+                className="mt-6"
+              >
+                Mostra di più
+              </Button>
+            </div>
+          )}
         </div>
-        {!showMore && (
-          <div className="flex justify-center w-full">
-            <Button
-              variant="secondary"
-              onClick={() => setShowMore(true)}
-              className="mt-6"
-            >
-              Mostra di più
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );
