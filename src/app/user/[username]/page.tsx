@@ -1,5 +1,5 @@
 // app/user/[username]/page.tsx
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -44,11 +44,8 @@ export default async function UserProfilePage({ params }: Props) {
   return (
     <div className="container mx-auto p-4 pt-20">
       <div className="max-w-6xl mx-auto">
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Profilo di {username}</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <Card className="mb-8 bg-custom-background border-0 text-custom-secondary">
+          <CardContent className="pt-5">
             <div className="flex items-center gap-4 mb-6">
               <div>
                 <h2 className="text-2xl font-bold">{username}</h2>
@@ -66,7 +63,7 @@ export default async function UserProfilePage({ params }: Props) {
               href={`/anime/${rating.animeId.replace("mal_", "")}`}
               key={rating.id}
             >
-              <Card className="hover:bg-accent/50 transition-colors">
+              <Card className="bg-custom-secondary transition-transform hover:scale-105">
                 <CardContent className="p-6">
                   <div className="flex gap-4">
                     <div className="relative h-[150px] w-[100px] flex-shrink-0">
@@ -82,29 +79,29 @@ export default async function UserProfilePage({ params }: Props) {
                       <h3 className="font-bold mb-2">{rating.anime.title}</h3>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
                           <span>Trama: {rating.plot.toFixed(1)}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
                           <span>Animazione: {rating.animation.toFixed(1)}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
                           <span>
                             Personaggi: {rating.characters.toFixed(1)}
                           </span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
                           <span>Dialoghi: {rating.dialogues.toFixed(1)}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
                           <span>Sonoro: {rating.soundtrack.toFixed(1)}</span>
                         </div>
                         <div className="flex items-center gap-1 font-bold">
-                          <Star className="h-4 w-4 fill-violet-400 text-violet-400" />
+                          <Star className="h-4 w-4 fill-custom-primary text-custom-primary" />
                           <span>Totale: {rating.overall.toFixed(1)}</span>
                         </div>
                       </div>

@@ -126,13 +126,11 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
       }
 
       const result = await submitRating(animeData, ratings as RatingData);
-      console.log(result);
 
       if ("error" in result) {
         setError("Errore sconosciuto");
       } else {
         // Opzionale: mostra un messaggio di successo
-        console.log("Votazione salvata con successo");
         setSuccess("Votazione salvata con successo");
       }
     } catch (error) {
@@ -146,7 +144,7 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
   const handleClassColor = () => {
     if (overallRating < 5) return "text-red-500";
     if (overallRating < 7) return "text-yellow-500";
-    if (overallRating === 10) return "text-violet-500";
+    if (overallRating === 10) return "text-custom-primary";
     return "text-green-500";
   };
 
@@ -169,7 +167,7 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="bg-custom-background">
         <CardContent className="p-6 flex justify-center items-center">
           <Loader2 className="h-6 w-6 animate-spin" />
         </CardContent>
@@ -178,9 +176,11 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
   }
 
   return (
-    <Card>
+    <Card className="bg-custom-background border-0">
       <CardHeader>
-        <CardTitle>La tua valutazione</CardTitle>
+        <CardTitle className="text-custom-primary text-xl">
+          La tua valutazione
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {success && (
@@ -198,8 +198,10 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
             <div key={category.key} className="space-y-2">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="font-medium">{category.name}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-custom-primary">
+                    {category.name}
+                  </p>
+                  <p className="text-sm pr-2 text-muted-foreground">
                     {category.description}
                   </p>
                 </div>
@@ -216,9 +218,9 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
                         key={i}
                       >
                         <Star
-                          className={`h-6 w-6 cursor-pointer transition-colors ${
+                          className={`size-4 md:size-6 cursor-pointer transition-colors ${
                             shouldFill
-                              ? "fill-yellow-400 text-yellow-400"
+                              ? "fill-custom-accent text-custom-accent"
                               : "text-muted-foreground"
                           }`}
                           onMouseEnter={() =>
@@ -229,7 +231,7 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
                           }
                           onClick={() => handleRatingClick(category.key, i + 1)}
                         />
-                        <p>{i + 1}</p>
+                        <p className="text-sm">{i + 1}</p>
                       </div>
                     );
                   })}
@@ -241,7 +243,9 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
 
         <div className="flex justify-end mt-6">
           <div className="text-center flex gap-3 items-center rounded-md px-4 py-2">
-            <h3 className="font-semibold">VOTO COMPLESSIVO:</h3>
+            <h3 className="font-semibold text-custom-secondary">
+              VOTO COMPLESSIVO:
+            </h3>
             <p className={`font-bold text-xl ${handleClassColor()}`}>
               {overallRating}
             </p>
@@ -249,10 +253,11 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
         </div>
         <div className="flex justify-center gap-4">
           <Button
-            size="lg"
+            variant={"customPrimary"}
+            size="sm"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="mt-4"
+            className="mt-4 font-bold"
           >
             {isSubmitting ? (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -260,13 +265,13 @@ export default function AnimeRating({ animeId }: AnimeRatingProps) {
             Salva votazione
           </Button>
           <Button
-            size="lg"
-            variant="destructive"
+            size="sm"
+            variant="customSecondary"
             onClick={() => setRatings({})}
             disabled={isSubmitting}
-            className="mt-4"
+            className="mt-4 font-bold"
           >
-            Annulla votazione
+            Pulisci votazione
           </Button>
         </div>
       </CardContent>

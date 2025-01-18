@@ -38,8 +38,8 @@ export default async function AnimePage({ params }: AnimePage) {
           Torna alla ricerca
         </Button>
       </Link>
-      <div className="max-w-6xl mx-auto grid grid-cols-2">
-        <Card>
+      <div className="max-w-6xl mx-auto flex flex-col gap-2 md:grid grid-cols-2">
+        <Card className="bg-custom-background border-0">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="relative h-[400px] w-full">
@@ -54,34 +54,46 @@ export default async function AnimePage({ params }: AnimePage) {
               </div>
 
               <div className="md:col-span-2">
-                <h1 className="text-3xl font-bold mb-2">{anime.title}</h1>
+                <h1 className="text-3xl text-custom-primary font-bold mb-2">
+                  {anime.title}
+                </h1>
                 {anime.title_japanese && (
                   <h2 className="text-xl text-muted-foreground mb-4">
                     {anime.title_japanese}
                   </h2>
                 )}
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-2 gap-4 mb-6 text-custom-secondary">
                   <div>
-                    <p className="text-sm text-muted-foreground">Punteggio</p>
+                    <p className="text-sm text-muted-foreground font-semibold text-custom-primary">
+                      Punteggio
+                    </p>
                     <p className="font-medium">{anime.score || "N/A"}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Anno</p>
+                    <p className="text-sm text-muted-foreground font-semibold text-custom-primary">
+                      Anno
+                    </p>
                     <p className="font-medium">{anime.year || "N/A"}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Episodi</p>
+                    <p className="text-sm text-muted-foreground font-semibold text-custom-primary">
+                      Episodi
+                    </p>
                     <p className="font-medium">{anime.episodes || "N/A"}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Stato</p>
+                    <p className="text-sm text-muted-foreground font-semibold text-custom-primary">
+                      Stato
+                    </p>
                     <p className="font-medium">{anime.status}</p>
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-2">Sinossi</h3>
+                  <h3 className="text-lg font-semibold mb-2 text-custom-secondary">
+                    Sinossi
+                  </h3>
                   <p className="text-muted-foreground line-clamp-5">
                     {anime.synopsis}
                   </p>
@@ -92,7 +104,7 @@ export default async function AnimePage({ params }: AnimePage) {
                     (genre: { mal_id: number; name: string }) => (
                       <span
                         key={genre.mal_id}
-                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                        className="px-3 py-1 bg-custom-secondary text-custom-background rounded-full text-sm"
                       >
                         {genre.name}
                       </span>

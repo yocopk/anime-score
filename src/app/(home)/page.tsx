@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import AnimeCard from "@/components/AnimeCard";
+import { BookHeart } from "lucide-react";
 
 interface AnimeRecommendation {
   mal_id: string;
@@ -99,33 +99,7 @@ export default function HomePage() {
         // Limitiamo il numero di anime mostrati (opzionale)
         .slice(0, showMore ? undefined : 12)
         .map((anime) => (
-          <div
-            key={`anime-${anime.mal_id}`}
-            className="bg-slate-500 dark:bg-gray-800 max-h-[200px] rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]"
-          >
-            <Link href={`/anime/${anime.mal_id}`} className="flex">
-              <div className="relative">
-                <Image
-                  src={
-                    anime.images.jpg.large_image_url ||
-                    "/api/placeholder/300/200"
-                  }
-                  alt={anime.title}
-                  width={300}
-                  height={200}
-                  className="object-center object-fit h-full max-w-[150px]"
-                />
-              </div>
-              <div className="">
-                <h3 className="text-xl bg-slate-800/70 text-white p-2 font-bold mb-2 dark:text-white line-clamp-2">
-                  {anime.title}
-                </h3>
-                <p className="text-sm px-2 text-white/70 dark:text-gray-300 line-clamp-4">
-                  {anime.content}
-                </p>
-              </div>
-            </Link>
-          </div>
+          <AnimeCard key={anime.mal_id} anime={anime} variant="featured" />
         ))
     );
   };
@@ -133,37 +107,42 @@ export default function HomePage() {
   return (
     <div className="container mx-auto p-4">
       <div className="max-w-6xl mx-auto mt-20">
-        <div className="bg-slate-800/60 rounded-xl p-5">
+        <div className="bg-custom-foreground/80 rounded-xl p-5">
           <div className="flex items-center justify-center gap-3 mb-5 py-3">
-            <h2 className="text-2xl font-bold text-white dark:text-white">
-              Featured Animes
-            </h2>
-            {showMore && (
-              <Button variant="default" onClick={() => setShowMore(false)}>
-                Mostra meno
-              </Button>
-            )}
+            <div className="flex items-center text-custom-secondary gap-2">
+              <BookHeart />
+              <h2 className="text-2xl font-bold">Anime in evidenza</h2>
+            </div>
           </div>
+          {showMore && (
+            <Button
+              className="text-center w-full text-custom-destructive"
+              variant="link"
+              onClick={() => setShowMore(false)}
+            >
+              Mostra meno
+            </Button>
+          )}
 
           {isLoading && (
             <div className="flex justify-center items-center min-h-[200px]">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-custom-accent"></div>
             </div>
           )}
 
           {error && <div className="text-red-500 text-center p-4">{error}</div>}
 
           {!isLoading && !error && (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-3 gap-6">
+            <div className="flex flex-col md:grid md:grid-cols-4 lg:grid-cols-3 gap-6">
               {renderRecommendationCards()}
             </div>
           )}
           {!showMore && (
             <div className="flex justify-center w-full">
               <Button
-                variant="default"
+                variant="link"
                 onClick={() => setShowMore(true)}
-                className="mt-6"
+                className="mt-6 text-custom-destructive"
               >
                 Mostra di più
               </Button>
