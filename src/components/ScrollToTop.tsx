@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function ScrollToTop() {
@@ -34,10 +35,10 @@ export default function ScrollToTop() {
   return (
     isVisible && (
       <div
-        className="fixed bottom-4 right-4 size-10 text-center bg-yellow-500 text-white p-2 rounded-full shadow-lg cursor-pointer hover:bg-gray-600"
+        className="fixed bottom-4 right-4 size-10 text-center bg-custom-accent text-white p-2 rounded-full shadow-lg cursor-pointer hover:bg-custom-accent/90"
         onClick={scrollToTop}
       >
-        ↑
+        <ArrowUp />
       </div>
     )
   );

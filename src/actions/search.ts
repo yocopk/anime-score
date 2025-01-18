@@ -21,7 +21,7 @@ export async function actionSearchAnime(query: string) {
   }
 }
 
-export async function searchUsers(query: string) {
+export async function actionSearchUsers(query: string) {
   if (!query || query.length < 2) {
     return [];
   }
