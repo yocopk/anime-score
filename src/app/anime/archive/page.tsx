@@ -12,9 +12,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { ListFilter, Loader2 } from "lucide-react";
+import AnimeCard from "@/components/AnimeCard";
 
 interface Anime {
   mal_id: number;
@@ -41,6 +40,7 @@ export default function AnimeArchivePage() {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [totalResults, setTotalResults] = useState(0);
 
   // Fetch genres on component mount
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function AnimeArchivePage() {
 
         const response = await fetch(url);
         const data = await response.json();
-
+        setTotalResults(data.pagination.items.total);
         setAnimes(data.data);
         setTotalPages(Math.ceil(data.pagination.items.total / 24));
       } catch (error) {
@@ -105,20 +105,23 @@ export default function AnimeArchivePage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 mt-20 bg-slate-800/70 p-5">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 mt-20 bg-custom-background/70 rounded-lg p-5">
         {/* Filters sidebar */}
         <div className="w-full md:w-64 space-y-4">
-          <Card>
+          <Card className="bg-custom-foreground border-0 text-custom-secondary">
             <CardContent className="p-4">
-              <h3 className="font-bold mb-4">Search</h3>
+              <h3 className="font-bold mb-4">Cerca</h3>
               <Input
-                placeholder="Search anime..."
+                placeholder="Cerca anime..."
                 value={searchQuery}
                 onChange={handleSearch}
-                className="mb-4"
+                className="mb-4 border-0 !ring-0 bg-custom-background"
               />
+              <div className="flex justify-start items-center gap-2 my-5">
+                <ListFilter />
+                <h3 className="font-bold">Generi</h3>
+              </div>
 
-              <h3 className="font-bold mb-4">Genres</h3>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {genres.map((genre) => (
                   <div
@@ -139,14 +142,20 @@ export default function AnimeArchivePage() {
                   </div>
                 ))}
               </div>
-
+              {!isLoading && (
+                <div className="text-right mt-3">
+                  <span className="bg-custom-primary px-2 py-1 rounded-full">
+                    {totalResults}
+                  </span>{" "}
+                </div>
+              )}
               {selectedGenres.length > 0 && (
                 <Button
-                  variant="outline"
+                  variant="customSecondary"
                   className="mt-4 w-full"
                   onClick={() => setSelectedGenres([])}
                 >
-                  Clear Filters
+                  Elimina Filtri
                 </Button>
               )}
             </CardContent>
@@ -157,57 +166,22 @@ export default function AnimeArchivePage() {
         <div className="flex-1 rounded-xl p-4">
           {isLoading ? (
             <div className="flex justify-center items-center min-h-[400px]">
-              <Loader2 className="h-8 w-8 animate-spin" />
+              <Loader2 className="h-8 w-8 animate-spin text-custom-accent" />
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {animes.map((anime) => (
-                  <Link
-                    href={`/anime/${anime.mal_id}`}
-                    target="_blank"
+                  <AnimeCard
                     key={anime.mal_id}
-                    className="transition-transform min-h-max hover:scale-[1.02]"
-                  >
-                    <Card>
-                      <CardContent className="p-0">
-                        <div className="relative h-48">
-                          <Image
-                            src={
-                              anime.images.jpg.large_image_url ||
-                              "/api/placeholder/400/200"
-                            }
-                            alt={anime.title}
-                            fill
-                            className="object-cover rounded-t-lg"
-                          />
-                        </div>
-                        <div className="p-4">
-                          <h3 className="font-bold line-clamp-1">
-                            {anime.title}
-                          </h3>
-                          <p className="text-sm text-gray-500 line-clamp-2 mt-2">
-                            {anime.synopsis}
-                          </p>
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {anime.genres.slice(0, 3).map((genre) => (
-                              <span
-                                key={genre.mal_id}
-                                className="text-xs bg-slate-200 dark:bg-slate-700 rounded-full px-2 py-1"
-                              >
-                                {genre.name}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                    anime={anime}
+                    variant="archive"
+                  />
                 ))}
               </div>
 
               <Pagination className="mt-8">
-                <PaginationContent>
+                <PaginationContent className="flex justify-between items-center gap-5 text-custom-secondary">
                   <PaginationItem>
                     <PaginationPrevious
                       href="#"
@@ -224,22 +198,22 @@ export default function AnimeArchivePage() {
 
                   {/* Show current page and total pages */}
                   <PaginationItem>
-                    <PaginationLink>
+                    <PaginationLink className="pointer-events-none">
                       {currentPage} / {totalPages}
                     </PaginationLink>
                   </PaginationItem>
 
-                  <PaginationItem>
+                  <PaginationItem className="">
                     <PaginationNext
                       href="#"
                       onClick={() =>
                         setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                       }
-                      className={
+                      className={` ${
                         currentPage === totalPages
                           ? "pointer-events-none opacity-50"
                           : ""
-                      }
+                      }`}
                     />
                   </PaginationItem>
                 </PaginationContent>

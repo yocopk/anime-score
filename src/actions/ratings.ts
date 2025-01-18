@@ -183,3 +183,52 @@ export async function getUserRating(animeId: number) {
     return null;
   }
 }
+
+export async function getAllUserRatings() {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return null;
+    }
+
+    const ratings = await db.rating.findMany({
+      where: {
+        userId: user.id,
+      },
+      include: {
+        anime: true, // Include i dati dell'anime associato
+      },
+      orderBy: {
+        updatedAt: "desc", // Ordina per data di aggiornamento
+      },
+    });
+
+    return ratings;
+  } catch (error) {
+    console.error("Error in getAllUserRatings:", error);
+    return null;
+  }
+}
+
+export async function actionDeleteRating(animeId: string) {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return { error: "Devi essere loggato per eliminare la votazione" };
+    }
+
+    await db.rating.delete({
+      where: {
+        id: `${user.id}_${animeId}`,
+      },
+    });
+
+    revalidatePath("/user/my-ratings");
+    return { success: true };
+  } catch (error) {
+    console.error("Error in actionDeleteRating:", error);
+    return { error: "Errore durante l'eliminazione della votazione" };
+  }
+}

@@ -30,12 +30,11 @@ export default function AnimeSearch() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [showResults, setShowResults] = React.useState(false);
   const { user, isLoaded } = useUser();
+  const searchRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (user && isLoaded) {
-      console.log(user);
       const email = user.emailAddresses[0].emailAddress;
-      console.log(email);
 
       if (email) {
         const handleSync = async () => await actionSyncUser(email);
@@ -81,22 +80,39 @@ export default function AnimeSearch() {
     router.push(`/anime/${animeId}`);
   };
 
+  // Aggiungiamo l'event listener per il click fuori
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative w-full max-w-xl mx-auto">
+    <div className="relative w-full max-w-xl mx-auto" ref={searchRef}>
       <div className="relative">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-white/50" />
+        <Search className="absolute left-2 top-2.5 h-4 w-4 text-custom-secondary" />
         <Input
           placeholder="Cerca un anime..."
           value={query}
           onChange={handleInputChange}
-          className="pl-8 text-white"
+          className="pl-8 text-custom-secondary bg-custom-foreground !ring-0 !border-0"
           onFocus={() => setShowResults(true)}
         />
       </div>
 
       {/* Risultati della ricerca */}
       {showResults && (query.length >= 3 || results.length > 0) && (
-        <Card className="absolute mt-1 w-full max-h-96 overflow-y-auto z-50">
+        <Card className="absolute mt-1 w-full max-h-96 min-w-64 overflow-y-auto z-50">
           <div className="p-2">
             {isLoading ? (
               <p className="text-sm text-muted-foreground p-2">
