@@ -53,6 +53,7 @@ export default function UserSearch() {
         const users = await actionSearchUsers(debouncedQuery);
         setResults(users);
       } catch (error) {
+        console.error(error);
         setError("Failed to search users");
         setResults([]);
       } finally {

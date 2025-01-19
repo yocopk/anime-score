@@ -7,12 +7,11 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AnimeRating from "@/components/AnimeRating";
 
-interface AnimePage {
+export default async function AnimePage({
+  params: { id },
+}: {
   params: { id: string };
-}
-
-export default async function AnimePage({ params }: AnimePage) {
-  const { id } = await params;
+}) {
   const animeId = Number(id);
   const { data: anime, error } = await getAnimeDetails(animeId);
 
