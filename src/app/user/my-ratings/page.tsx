@@ -7,12 +7,6 @@ import { Button } from "@/components/ui/button";
 import { actionDeleteRating, getAllUserRatings } from "@/actions/ratings";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Clipboard } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -126,18 +120,12 @@ export default function MyRatingsPage() {
                       : username}
                   </h2>
                   <div className="relative">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button variant={"customGhost"} onClick={handleCopy}>
-                            <Clipboard className="size-4 text-custom-primary" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Copia il link del tuo profilo!</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <div
+                      className="p-2 rounded-full hover:bg-custom-foreground/70 cursor-pointer transition-colors duration-150"
+                      onClick={handleCopy}
+                    >
+                      <Clipboard className="size-4 text-custom-primary" />
+                    </div>
                     {isCopied && (
                       <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap transition-all duration-300 fade-in-10">
                         <span className="text-sm text-custom-background bg-custom-primary px-3 py-1.5 rounded-md shadow-sm">
