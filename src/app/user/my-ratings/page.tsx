@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { actionDeleteRating, getAllUserRatings } from "@/actions/ratings";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Clipboard } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // Definizione del tipo Rating
@@ -30,10 +37,32 @@ export default function MyRatingsPage() {
   const router = useRouter();
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = async () => {
+    if (!user) return;
+
+    const username =
+      user.emailAddresses[0]?.emailAddress.split("@")[0] || "Utente";
+    const baseUrl = window.location.origin;
+    const fullUrl = `${baseUrl}/user/${username}`;
+
+    try {
+      await navigator.clipboard.writeText(fullUrl);
+      console.log("Link copiato: ", fullUrl);
+      setIsCopied(true);
+    } catch {
+      console.error("Impossibile copiare il link.");
+      setIsCopied(false);
+    }
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 3000);
+  };
 
   useEffect(() => {
     if (isLoaded && !user) {
-      router.push("/sign-in");
+      router.push("/");
       return;
     }
 
@@ -90,7 +119,36 @@ export default function MyRatingsPage() {
                 />
               )}
               <div>
-                <h2 className="text-2xl font-bold">{username}</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-2xl font-bold truncate">
+                    {username.length > 13
+                      ? `${username.slice(0, 13)}...`
+                      : username}
+                  </h2>
+                  <div className="relative">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Button variant={"customGhost"} onClick={handleCopy}>
+                            <Clipboard className="size-4 text-custom-primary" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Copia il link del tuo profilo!</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    {isCopied && (
+                      <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap transition-all duration-300 fade-in-10">
+                        <span className="text-sm text-custom-background bg-custom-primary px-3 py-1.5 rounded-md shadow-sm">
+                          Link copiato!
+                        </span>
+                        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-custom-primary rotate-45"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <p className="text-muted-foreground">
                   {ratings.length} anime valutati
                 </p>
@@ -191,7 +249,7 @@ export default function MyRatingsPage() {
               </p>
               <Link
                 href="/"
-                className="text-primary hover:underline mt-2 inline-block"
+                className="text-custom-primary hover:underline mt-2 inline-block"
               >
                 Inizia a cercare anime da valutare
               </Link>
