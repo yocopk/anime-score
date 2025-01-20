@@ -22,16 +22,22 @@ type Rating = {
   overall: number;
   anime: {
     title: string;
+    year: number;
     coverImage: string;
   };
 };
+
+// type SortOption = "recent-added" | "alphabetical" | "year" | "overall-score";
 
 export default function MyRatingsPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [ratings, setRatings] = useState<Rating[]>([]);
+  // const [animeData, setAnimeData] = useState<any[]>([]);
+  // const [sortedRatings, setSortedRatings] = useState<Rating[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
+  // const [sortBy, setSortBy] = useState<SortOption>("recent-added");
 
   const handleCopy = async () => {
     if (!user) return;
@@ -83,6 +89,33 @@ export default function MyRatingsPage() {
       </div>
     );
   }
+
+  // const sortRatings = (ratings: Rating[], sortBy: SortOption) => {
+  //   switch (sortBy) {
+  //     case "recent-added":
+  //       const sortedByRecently = ratings.sort(
+  //         (a, b) => new Date(b.id).getTime() - new Date(a.id).getTime()
+  //       );
+  //       setSortedRatings(sortedByRecently);
+  //     case "alphabetical":
+  //       const sortedByAlphabet = ratings.sort((a, b) =>
+  //         a.anime.title.localeCompare(b.anime.title)
+  //       );
+  //       setSortedRatings(sortedByAlphabet);
+  //     case "year":
+  //       const sortedByYear = ratings.sort(
+  //         (a, b) => a.anime.year - b.anime.year
+  //       );
+  //       setSortedRatings(sortedByYear);
+  //     case "overall-score":
+  //       const sortedByOverallScore = ratings.sort(
+  //         (a, b) => b.overall - a.overall
+  //       );
+  //       setSortedRatings(sortedByOverallScore);
+  //     default:
+  //       setSortedRatings(ratings);
+  //   }
+  // };
 
   const username =
     user?.emailAddresses?.[0]?.emailAddress.split("@")[0] || "Utente";
@@ -145,6 +178,8 @@ export default function MyRatingsPage() {
           </CardContent>
         </Card>
 
+        {/* Filtra in ordine di data d'aggiunta, alfabetico o in base all'anno dell'anime */}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {ratings.map((rating) => (
             <div key={rating.id}>
@@ -173,25 +208,23 @@ export default function MyRatingsPage() {
                       <div className="flex flex-col md:grid grid-cols-2 gap-1 text-xs md:text-sm">
                         <div className="flex items-center gap-1">
                           <Star className="size-3 md:size-4 fill-custom-accent text-custom-accent" />
-                          <span>Trama: {rating.plot.toFixed(1)}</span>
+                          <span>Trama: {rating.plot}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="size-3 md:size-4 fill-custom-accent text-custom-accent" />
-                          <span>Animazione: {rating.animation.toFixed(1)}</span>
+                          <span>Animazione: {rating.animation}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="size-3 md:size-4 fill-custom-accent text-custom-accent" />
-                          <span>
-                            Personaggi: {rating.characters.toFixed(1)}
-                          </span>
+                          <span>Personaggi: {rating.characters}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="size-3 md:size-4 fill-custom-accent text-custom-accent" />
-                          <span>Dialoghi: {rating.dialogues.toFixed(1)}</span>
+                          <span>Dialoghi: {rating.dialogues}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="size-3 md:size-4 fill-custom-accent text-custom-accent" />
-                          <span>Sonoro: {rating.soundtrack.toFixed(1)}</span>
+                          <span>Sonoro: {rating.soundtrack}</span>
                         </div>
                         <div className="flex items-center gap-1 font-bold">
                           <Star className="size-3 md:size-4 fill-custom-primary text-custom-primary" />

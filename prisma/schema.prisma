@@ -25,6 +25,7 @@ model Anime {
   id          String   @id @default(cuid())
   title       String
   description String
+  year        Int
   coverImage  String // URL per l'immagine dell'anime
   ratings     Rating[]
 }
