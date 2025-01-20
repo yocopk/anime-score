@@ -9,6 +9,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,6 +32,9 @@ interface Anime {
     };
   };
   synopsis: string;
+  year: number;
+  status: string;
+  type: string;
 }
 
 interface Genre {
@@ -42,6 +52,52 @@ export default function AnimeArchivePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [totalResults, setTotalResults] = useState(0);
 
+  // Stati per i filtri con valore di default "all"
+  const [selectedYear, setSelectedYear] = useState("all");
+  const [selectedType, setSelectedType] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedSort, setSelectedSort] = useState("all");
+
+  // const years = Array.from({ length: 2024 - 1960 + 1 }, (_, i) => 2024 - i);
+  const types = [
+    {
+      value: "TV",
+      label: "Serie",
+    },
+    {
+      value: "Movie",
+      label: "Film",
+    },
+    {
+      value: "OVA",
+      label: "OVA",
+    },
+    ,
+    {
+      value: "Special",
+      label: "Speciali",
+    },
+    {
+      value: "ONA",
+      label: "ONA",
+    },
+    {
+      value: "Music",
+      label: "Musicali",
+    },
+  ];
+  const statuses = [
+    { value: "Airing", label: "In corso" },
+    { value: "Complete", label: "Conclusi" },
+    { value: "Upcoming", label: "In arrivo" },
+  ];
+  const sortOptions = [
+    { value: "title", label: "A-Z" },
+    { value: "-title", label: "Z-A" },
+    { value: "start_date", label: "Data (Vecchi)" },
+    { value: "-start_date", label: "Data (Nuovi)" },
+  ];
+
   // Fetch genres on component mount
   useEffect(() => {
     const fetchGenres = async () => {
@@ -57,7 +113,7 @@ export default function AnimeArchivePage() {
     fetchGenres();
   }, []);
 
-  // Fetch animes when page, genres, or search changes
+  // Fetch animes when filters change
   useEffect(() => {
     const fetchAnimes = async () => {
       setIsLoading(true);
@@ -67,9 +123,22 @@ export default function AnimeArchivePage() {
         if (selectedGenres.length > 0) {
           url += `&genres=${selectedGenres.join(",")}`;
         }
-
         if (searchQuery) {
           url += `&q=${encodeURIComponent(searchQuery)}`;
+        }
+        if (selectedYear !== "all") {
+          url += `&start_date=${selectedYear}`;
+        }
+        if (selectedType !== "all") {
+          url += `&type=${selectedType}`;
+        }
+        if (selectedStatus !== "all") {
+          url += `&status=${selectedStatus}`;
+        }
+        if (selectedSort !== "all") {
+          url += `&order_by=${selectedSort.replace(/^-/, "")}&sort=${
+            selectedSort.startsWith("-") ? "desc" : "asc"
+          }`;
         }
 
         const response = await fetch(url);
@@ -84,10 +153,17 @@ export default function AnimeArchivePage() {
       }
     };
 
-    // Add delay to respect API rate limiting
     const timeoutId = setTimeout(fetchAnimes, 1000);
     return () => clearTimeout(timeoutId);
-  }, [currentPage, selectedGenres, searchQuery]);
+  }, [
+    currentPage,
+    selectedGenres,
+    searchQuery,
+    selectedYear,
+    selectedType,
+    selectedStatus,
+    selectedSort,
+  ]);
 
   const handleGenreToggle = (genreId: number) => {
     setSelectedGenres((prev) =>
@@ -95,12 +171,22 @@ export default function AnimeArchivePage() {
         ? prev.filter((id) => id !== genreId)
         : [...prev, genreId]
     );
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-    setCurrentPage(1); // Reset to first page when search changes
+    setCurrentPage(1);
+  };
+
+  const resetFilters = () => {
+    setSelectedGenres([]);
+    setSelectedYear("all");
+    setSelectedType("all");
+    setSelectedStatus("all");
+    setSelectedSort("all");
+    setSearchQuery("");
+    setCurrentPage(1);
   };
 
   return (
@@ -117,12 +203,15 @@ export default function AnimeArchivePage() {
                 onChange={handleSearch}
                 className="mb-4 border-0 !ring-0 bg-custom-background"
               />
+
+              {/* Select per i filtri */}
+
               <div className="flex justify-start items-center gap-2 my-5">
                 <ListFilter />
                 <h3 className="font-bold">Generi</h3>
               </div>
 
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="space-y-2 max-h-44 md:max-h-96 overflow-y-auto">
                 {genres.map((genre) => (
                   <div
                     key={genre.mal_id}
@@ -142,18 +231,25 @@ export default function AnimeArchivePage() {
                   </div>
                 ))}
               </div>
+
               {!isLoading && (
                 <div className="text-right mt-3">
                   <span className="bg-custom-primary px-2 py-1 rounded-full">
                     {totalResults}
-                  </span>{" "}
+                  </span>
                 </div>
               )}
-              {selectedGenres.length > 0 && (
+
+              {(selectedGenres.length > 0 ||
+                selectedYear !== "all" ||
+                selectedType !== "all" ||
+                selectedStatus !== "all" ||
+                selectedSort !== "all" ||
+                searchQuery) && (
                 <Button
                   variant="customSecondary"
                   className="mt-4 w-full"
-                  onClick={() => setSelectedGenres([])}
+                  onClick={resetFilters}
                 >
                   Elimina Filtri
                 </Button>
@@ -164,6 +260,49 @@ export default function AnimeArchivePage() {
 
         {/* Main content */}
         <div className="flex-1 rounded-xl p-4">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-3 mb-6">
+            <Select value={selectedType} onValueChange={setSelectedType}>
+              <SelectTrigger className="bg-custom-secondary text-custom-background">
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tutti i tipi</SelectItem>
+                {types.map((el, index) => (
+                  <SelectItem key={index} value={el!.value}>
+                    {el?.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger className="bg-custom-secondary text-custom-background">
+                <SelectValue placeholder="Stato" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tutti gli stati</SelectItem>
+                {statuses.map((el, index) => (
+                  <SelectItem key={index} value={el.value}>
+                    {el.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedSort} onValueChange={setSelectedSort}>
+              <SelectTrigger className="bg-custom-secondary text-custom-background">
+                <SelectValue placeholder="Ordina per" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Nessun ordine</SelectItem>
+                {sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           {isLoading ? (
             <div className="flex justify-center items-center min-h-[400px]">
               <Loader2 className="h-8 w-8 animate-spin text-custom-accent" />
@@ -196,24 +335,23 @@ export default function AnimeArchivePage() {
                     />
                   </PaginationItem>
 
-                  {/* Show current page and total pages */}
                   <PaginationItem>
                     <PaginationLink className="pointer-events-none">
                       {currentPage} / {totalPages}
                     </PaginationLink>
                   </PaginationItem>
 
-                  <PaginationItem className="">
+                  <PaginationItem>
                     <PaginationNext
                       href="#"
                       onClick={() =>
                         setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                       }
-                      className={` ${
+                      className={
                         currentPage === totalPages
                           ? "pointer-events-none opacity-50"
                           : ""
-                      }`}
+                      }
                     />
                   </PaginationItem>
                 </PaginationContent>

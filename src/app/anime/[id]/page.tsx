@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AnimeRating from "@/components/AnimeRating";
+import HandleDescription from "./(components)/HandleDescription";
 
 export default async function AnimePage({
   params: { id },
@@ -19,7 +20,7 @@ export default async function AnimePage({
     return (
       <div className="container mx-auto p-4">
         <p className="text-red-500">{error}</p>
-        <Link href="/">
+        <Link href="/anime/archive">
           <Button variant="link">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Torna alla ricerca
@@ -30,8 +31,8 @@ export default async function AnimePage({
   }
 
   return (
-    <div className="container mx-auto p-4 pt-20">
-      <Link href="/">
+    <div className="container mx-auto p-2 md:p-4 pt-20">
+      <Link href="/anime/archive">
         <Button variant="link" className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Torna alla ricerca
@@ -90,12 +91,7 @@ export default async function AnimePage({
                 </div>
 
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-2 text-custom-secondary">
-                    Sinossi
-                  </h3>
-                  <p className="text-muted-foreground line-clamp-5">
-                    {anime.synopsis}
-                  </p>
+                  <HandleDescription description={anime.synopsis} />
                 </div>
 
                 <div className="flex flex-wrap gap-2">

@@ -9,8 +9,14 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { Clipboard } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-// Definizione del tipo Rating
 type Rating = {
   id: string;
   animeId: string;
@@ -27,17 +33,15 @@ type Rating = {
   };
 };
 
-// type SortOption = "recent-added" | "alphabetical" | "year" | "overall-score";
+type SortOption = "recent-added" | "alphabetical" | "year" | "overall-score";
 
 export default function MyRatingsPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [ratings, setRatings] = useState<Rating[]>([]);
-  // const [animeData, setAnimeData] = useState<any[]>([]);
-  // const [sortedRatings, setSortedRatings] = useState<Rating[]>([]);
+  const [sortBy, setSortBy] = useState<SortOption>("recent-added");
   const [isLoading, setIsLoading] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
-  // const [sortBy, setSortBy] = useState<SortOption>("recent-added");
 
   const handleCopy = async () => {
     if (!user) return;
@@ -82,40 +86,26 @@ export default function MyRatingsPage() {
     }
   }, [user, isLoaded, router]);
 
-  if (!isLoaded || isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-custom-accent"></div>
-      </div>
-    );
-  }
+  const getSortedRatings = () => {
+    const ratingsCopy = [...ratings];
 
-  // const sortRatings = (ratings: Rating[], sortBy: SortOption) => {
-  //   switch (sortBy) {
-  //     case "recent-added":
-  //       const sortedByRecently = ratings.sort(
-  //         (a, b) => new Date(b.id).getTime() - new Date(a.id).getTime()
-  //       );
-  //       setSortedRatings(sortedByRecently);
-  //     case "alphabetical":
-  //       const sortedByAlphabet = ratings.sort((a, b) =>
-  //         a.anime.title.localeCompare(b.anime.title)
-  //       );
-  //       setSortedRatings(sortedByAlphabet);
-  //     case "year":
-  //       const sortedByYear = ratings.sort(
-  //         (a, b) => a.anime.year - b.anime.year
-  //       );
-  //       setSortedRatings(sortedByYear);
-  //     case "overall-score":
-  //       const sortedByOverallScore = ratings.sort(
-  //         (a, b) => b.overall - a.overall
-  //       );
-  //       setSortedRatings(sortedByOverallScore);
-  //     default:
-  //       setSortedRatings(ratings);
-  //   }
-  // };
+    switch (sortBy) {
+      case "recent-added":
+        return ratingsCopy.sort(
+          (a, b) => new Date(b.id).getTime() - new Date(a.id).getTime()
+        );
+      case "alphabetical":
+        return ratingsCopy.sort((a, b) =>
+          a.anime.title.localeCompare(b.anime.title)
+        );
+      case "year":
+        return ratingsCopy.sort((a, b) => b.anime.year - a.anime.year);
+      case "overall-score":
+        return ratingsCopy.sort((a, b) => b.overall - a.overall);
+      default:
+        return ratingsCopy;
+    }
+  };
 
   const username =
     user?.emailAddresses?.[0]?.emailAddress.split("@")[0] || "Utente";
@@ -126,6 +116,16 @@ export default function MyRatingsPage() {
       setRatings(ratings.filter((rating) => rating.animeId !== animeId));
     }
   };
+
+  if (!isLoaded || isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-custom-accent"></div>
+      </div>
+    );
+  }
+
+  const sortedRatings = getSortedRatings();
 
   return (
     <div className="container mx-auto p-4 pt-20">
@@ -169,7 +169,6 @@ export default function MyRatingsPage() {
                     )}
                   </div>
                 </div>
-
                 <p className="text-muted-foreground">
                   {ratings.length} anime valutati
                 </p>
@@ -178,10 +177,25 @@ export default function MyRatingsPage() {
           </CardContent>
         </Card>
 
-        {/* Filtra in ordine di data d'aggiunta, alfabetico o in base all'anno dell'anime */}
+        <div className="mb-6">
+          <Select
+            value={sortBy}
+            onValueChange={(value: SortOption) => setSortBy(value)}
+          >
+            <SelectTrigger className="w-[180px] bg-custom-secondary/80 !border-0 !ring-0 hover:bg-custom-secondary">
+              <SelectValue placeholder="Ordina per" />
+            </SelectTrigger>
+            <SelectContent className="">
+              <SelectItem value="recent-added">Recenti</SelectItem>
+              <SelectItem value="alphabetical">Ordine A-Z</SelectItem>
+              <SelectItem value="year">Anno</SelectItem>
+              <SelectItem value="overall-score">Punteggio</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {ratings.map((rating) => (
+          {sortedRatings.map((rating) => (
             <div key={rating.id}>
               <Card className="bg-custom-secondary">
                 <CardContent className="p-6">
@@ -236,21 +250,20 @@ export default function MyRatingsPage() {
                           href={`/anime/${rating.animeId.replace("mal_", "")}`}
                         >
                           <Button
-                            size={"sm"}
+                            size="sm"
                             className="text-custom-secondary"
                             variant="customPrimary"
                           >
-                            <Pencil />
+                            <Pencil className="mr-2 size-4" />
                             Modifica
                           </Button>
                         </Link>
                         <Button
                           onClick={() => handleDeleteRating(rating.animeId)}
-                          size={"sm"}
-                          className=""
+                          size="sm"
                           variant="destructive"
                         >
-                          <Trash2 />
+                          <Trash2 className="mr-2 size-4" />
                           Elimina
                         </Button>
                       </div>
