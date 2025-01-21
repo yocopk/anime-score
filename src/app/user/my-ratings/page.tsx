@@ -128,8 +128,8 @@ export default function MyRatingsPage() {
   const sortedRatings = getSortedRatings();
 
   return (
-    <div className="container mx-auto p-4 pt-20">
-      <div className="max-w-6xl mx-auto">
+    <div className="container mx-auto pt-20">
+      <div className="max-w-6xl p-2 md:p-4 mx-auto">
         <Card className="mb-8 bg-custom-background text-custom-secondary border-0">
           <CardHeader>
             <CardTitle>Le mie valutazioni</CardTitle>
@@ -149,7 +149,7 @@ export default function MyRatingsPage() {
                 <div className="flex items-center gap-2">
                   <h2 className="text-2xl font-bold truncate">
                     {username.length > 13
-                      ? `${username.slice(0, 13)}...`
+                      ? `${username.slice(0, 12)}...`
                       : username}
                   </h2>
                   <div className="relative">
@@ -254,7 +254,7 @@ export default function MyRatingsPage() {
                             className="text-custom-secondary"
                             variant="customPrimary"
                           >
-                            <Pencil className="mr-2 size-4" />
+                            <Pencil className="size-4" />
                             Modifica
                           </Button>
                         </Link>
@@ -263,7 +263,7 @@ export default function MyRatingsPage() {
                           size="sm"
                           variant="destructive"
                         >
-                          <Trash2 className="mr-2 size-4" />
+                          <Trash2 className="size-4" />
                           Elimina
                         </Button>
                       </div>

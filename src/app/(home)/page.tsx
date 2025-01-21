@@ -105,7 +105,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-2 md:p-4">
       <div className="max-w-6xl mx-auto mt-20">
         <div className="bg-custom-foreground/80 rounded-xl p-5">
           <div className="flex items-center justify-center gap-3 mb-5 py-3">

@@ -190,7 +190,7 @@ export default function AnimeArchivePage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-2 md:p-4">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 mt-20 bg-custom-background/70 rounded-lg p-5">
         {/* Filters sidebar */}
         <div className="w-full md:w-64 space-y-4">

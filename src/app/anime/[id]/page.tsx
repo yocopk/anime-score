@@ -18,7 +18,7 @@ export default async function AnimePage({
 
   if (error) {
     return (
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 pt-20">
         <p className="text-red-500">{error}</p>
         <Link href="/anime/archive">
           <Button variant="link">
@@ -31,14 +31,14 @@ export default async function AnimePage({
   }
 
   return (
-    <div className="container mx-auto p-2 md:p-4 pt-20">
+    <div className="container mx-auto pt-20">
       <Link href="/anime/archive">
         <Button variant="link" className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Torna alla ricerca
         </Button>
       </Link>
-      <div className="max-w-6xl mx-auto flex flex-col gap-2 md:grid grid-cols-2">
+      <div className="max-w-6xl p-2 mx-auto flex flex-col gap-2 md:grid grid-cols-2">
         <Card className="bg-custom-background border-0">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
