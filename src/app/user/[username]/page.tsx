@@ -42,8 +42,8 @@ export default async function UserProfilePage({ params }: Props) {
   });
 
   return (
-    <div className="container mx-auto p-4 pt-20">
-      <div className="max-w-6xl mx-auto">
+    <div className="container mx-auto pt-20">
+      <div className="max-w-6xl p-2 md:p-4 mx-auto">
         <Card className="mb-8 bg-custom-background border-0 text-custom-secondary">
           <CardContent className="pt-5">
             <div className="flex items-center gap-4 mb-6">
@@ -77,28 +77,26 @@ export default async function UserProfilePage({ params }: Props) {
                     </div>
                     <div className="flex-grow">
                       <h3 className="font-bold mb-2">{rating.anime.title}</h3>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="flex flex-col md:grid grid-cols-2 gap-2 text-xs md:text-sm">
                         <div className="flex items-center gap-1">
                           <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
-                          <span>Trama: {rating.plot.toFixed(1)}</span>
+                          <span>Trama: {rating.plot}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
-                          <span>Animazione: {rating.animation.toFixed(1)}</span>
+                          <span>Animazione: {rating.animation}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
-                          <span>
-                            Personaggi: {rating.characters.toFixed(1)}
-                          </span>
+                          <span>Personaggi: {rating.characters}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
-                          <span>Dialoghi: {rating.dialogues.toFixed(1)}</span>
+                          <span>Dialoghi: {rating.dialogues}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="h-4 w-4 fill-custom-accent text-custom-accent" />
-                          <span>Sonoro: {rating.soundtrack.toFixed(1)}</span>
+                          <span>Sonoro: {rating.soundtrack}</span>
                         </div>
                         <div className="flex items-center gap-1 font-bold">
                           <Star className="h-4 w-4 fill-custom-primary text-custom-primary" />
