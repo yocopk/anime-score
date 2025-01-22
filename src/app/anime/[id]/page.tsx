@@ -57,9 +57,9 @@ export default async function AnimePage({
                 <h1 className="text-3xl text-custom-primary font-bold mb-2">
                   {anime.title}
                 </h1>
-                {anime.title_japanese && (
+                {anime.title_english && (
                   <h2 className="text-xl text-muted-foreground mb-4">
-                    {anime.title_japanese}
+                    {anime.title_english}
                   </h2>
                 )}
 

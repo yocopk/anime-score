@@ -182,7 +182,7 @@ export default function MyRatingsPage() {
             value={sortBy}
             onValueChange={(value: SortOption) => setSortBy(value)}
           >
-            <SelectTrigger className="w-[180px] bg-custom-secondary/80 !border-0 !ring-0 hover:bg-custom-secondary">
+            <SelectTrigger className="w-[180px] bg-custom-secondary !border-0 !ring-0 hover:bg-custom-secondary">
               <SelectValue placeholder="Ordina per" />
             </SelectTrigger>
             <SelectContent className="">
@@ -197,7 +197,7 @@ export default function MyRatingsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {sortedRatings.map((rating) => (
             <div key={rating.id}>
-              <Card className="bg-custom-secondary">
+              <Card className="bg-custom-background border-0">
                 <CardContent className="p-6">
                   <div className="flex gap-4">
                     <div className="relative h-[150px] w-[100px] flex-shrink-0">
@@ -213,11 +213,17 @@ export default function MyRatingsPage() {
                         />
                       </Link>
                     </div>
-                    <div className="flex-grow">
+                    <div className="flex-grow text-custom-secondary">
                       <Link
+                        className="flex items-center gap-2 mb-2"
                         href={`/anime/${rating.animeId.replace("mal_", "")}`}
                       >
-                        <h3 className="font-bold mb-2">{rating.anime.title}</h3>
+                        <h3 className="font-bold text-custom-primary line-clamp-2">
+                          {rating.anime.title}
+                        </h3>
+                        <p className="text-gray-500 text-sm">
+                          {rating.anime.year}
+                        </p>
                       </Link>
                       <div className="flex flex-col md:grid grid-cols-2 gap-1 text-xs md:text-sm">
                         <div className="flex items-center gap-1">
