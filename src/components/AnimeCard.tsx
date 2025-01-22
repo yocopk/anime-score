@@ -32,7 +32,7 @@ export default function AnimeCard({
       >
         <Card className="flex bg-custom-background !border-0 !ring-0">
           <CardContent className="flex !pl-0 pr-1">
-            <div className="">
+            <div className="h-full">
               <Image
                 src={
                   anime.images.jpg.large_image_url || "/api/placeholder/300/200"
