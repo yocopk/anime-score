@@ -4,6 +4,7 @@ import {
   SignedIn,
   SignedOut,
   SignInButton,
+  useAuth,
   UserButton,
 } from "@clerk/nextjs";
 import Link from "next/link";
@@ -18,8 +19,10 @@ import {
 } from "./ui/dropdown-menu";
 import { Archive, CircleUserRound, House, Menu, Star } from "lucide-react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 export default function Navbar() {
+  const { userId, isLoaded } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
 
@@ -65,11 +68,30 @@ export default function Navbar() {
     },
   ];
 
+  const handleMenuItems = () => {
+    if (!userId || !isLoaded) {
+      return menuItems.filter((item) => item.title !== "My Ratings");
+    }
+    return menuItems;
+  };
+
+  const filteredMenuItems = handleMenuItems();
+
   return (
     <nav className={`fixed w-full bg-custom-background/90 p-4 z-10`}>
       <div className="container mx-auto lg:px-10 flex gap-10 lg:gap-4 justify-between items-center">
-        <Link href={"/"} className="flex justify-center items-center gap-2">
-          <h1 className="text-lg lg:text-2xl font-bold text-custom-primary">
+        <Link
+          href={"/"}
+          className="flex justify-center items-center gap-1 cursor-pointer transition-opacity duration-150 hover:opacity-80"
+        >
+          <Image
+            src="/animehunt-logo.png"
+            width={isMobile ? 30 : 40}
+            height={isMobile ? 30 : 40}
+            alt="AnimeHunt Logo"
+            className="pl-1"
+          />
+          <h1 className="text-lg lg:text-2xl font-bold text-custom-secondary">
             {!isMobile ? "AnimeHunt" : "AH"}
           </h1>
         </Link>
@@ -84,7 +106,7 @@ export default function Navbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-custom-background text-custom-secondary border-0 p-3">
-                {menuItems.map((item, index) => (
+                {filteredMenuItems.map((item, index) => (
                   <Link key={index} href={item.link}>
                     <DropdownMenuItem
                       className={`flex items-center gap-2 ${
@@ -102,7 +124,7 @@ export default function Navbar() {
             </DropdownMenu>
           ) : (
             <div className="flex gap-2">
-              {menuItems.map((item, index) => (
+              {filteredMenuItems.map((item, index) => (
                 <Link key={index} href={item.link}>
                   <Button
                     variant={

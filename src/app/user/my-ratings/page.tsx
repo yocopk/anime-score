@@ -65,10 +65,10 @@ export default function MyRatingsPage() {
   };
 
   useEffect(() => {
-    if (isLoaded && !user) {
-      router.push("/");
-      return;
-    }
+    // if (isLoaded && !user) {
+    //   router.push("/");
+    //   return;
+    // }
 
     const fetchRatings = async () => {
       try {
@@ -117,10 +117,20 @@ export default function MyRatingsPage() {
     }
   };
 
-  if (!isLoaded || isLoading) {
+  if (!isLoaded || (isLoading && user)) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-custom-accent"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center pt-28">
+        <p className="bg-red-300 text-red-700 p-4 rounded">
+          Devi accedere per poter usare questa pagina!
+        </p>
       </div>
     );
   }
