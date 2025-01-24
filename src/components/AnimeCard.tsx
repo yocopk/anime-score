@@ -26,43 +26,33 @@ export default function AnimeCard({
 }: AnimeCardProps) {
   if (variant === "featured") {
     return (
-      <Link
-        href={`/anime/${anime.mal_id}`}
-        className="max-h-[200px] rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]"
-      >
-        <Card className="flex bg-custom-background !border-0 !ring-0">
-          <CardContent className="flex !pl-0 pr-1">
-            <div className="h-full">
-              <Image
-                src={
-                  anime.images.jpg.large_image_url || "/api/placeholder/300/200"
-                }
-                alt={anime.title}
-                width={300}
-                height={200}
-                className="object-fit h-full max-w-[150px]"
-              />
+      <Link href={`/anime/${anime.mal_id}`} className="block">
+        <Card className="bg-custom-background overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-custom-foreground !border-0 !ring-0">
+          <div className="flex">
+            <div className="w-1/3 min-w-[120px]">
+              <div className="relative aspect-[2/3] h-full">
+                <Image
+                  src={
+                    anime.images.jpg.large_image_url ||
+                    "/placeholder.svg?height=300&width=200"
+                  }
+                  alt={anime.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
             </div>
-            <div className="p-4">
-              <h3 className="text-xl text-custom-primary font-bold mb-2 line-clamp-2">
-                {anime.title}
-              </h3>
-              <p className="text-sm text-white/70 dark:text-gray-300 line-clamp-4">
-                {anime.content}
-              </p>
-
-              {/* <div className="flex flex-wrap gap-2 mt-2">
-                {anime.genres?.slice(0, 3).map((genre) => (
-                  <span
-                    key={genre.mal_id}
-                    className="text-xs bg-custom-secondary dark:bg-slate-700 rounded-full px-2 py-1"
-                  >
-                    {genre.name}
-                  </span>
-                ))}
-              </div> */}
-            </div>
-          </CardContent>
+            <CardContent className="w-2/3 p-4 flex flex-col justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-custom-primary mb-2 line-clamp-2">
+                  {anime.title}
+                </h3>
+                <p className="text-sm text-custom-secondary/50 line-clamp-3">
+                  {anime.content}
+                </p>
+              </div>
+            </CardContent>
+          </div>
         </Card>
       </Link>
     );
