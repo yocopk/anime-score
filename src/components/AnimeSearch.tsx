@@ -7,8 +7,6 @@ import { Card } from "@/components/ui/card";
 import { actionSearchAnime } from "@/actions/search";
 import debounce from "lodash/debounce";
 import Image from "next/image";
-import { actionSyncUser } from "@/actions/sync-user";
-import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 interface Anime {
@@ -29,20 +27,20 @@ export default function AnimeSearch() {
   const [results, setResults] = React.useState<Anime[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showResults, setShowResults] = React.useState(false);
-  const { user, isLoaded } = useUser();
+  // const { user, isLoaded } = useUser();
   const searchRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    if (user && isLoaded) {
-      const email = user.emailAddresses[0].emailAddress;
+  // React.useEffect(() => {
+  //   if (user && isLoaded) {
+  //     const email = user.emailAddresses[0].emailAddress;
 
-      if (email) {
-        const handleSync = async () => await actionSyncUser(email);
-        const result = handleSync();
-        console.log(result);
-      }
-    }
-  }, [isLoaded, user]);
+  //     if (email) {
+  //       const handleSync = async () => await actionSyncUser(email);
+  //       const result = handleSync();
+  //       console.log(result);
+  //     }
+  //   }
+  // }, [isLoaded, user]);
 
   // Creiamo una versione debounced della funzione di ricerca
   const debouncedSearch = React.useMemo(

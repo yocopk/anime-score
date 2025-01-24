@@ -8,7 +8,7 @@ interface AnimeData {
   mal_id: number;
   title: string;
   synopsis: string;
-  year: number | null; // Modificato per gestire il caso null
+  year: number | null;
   images: {
     jpg: {
       large_image_url: string;
@@ -29,7 +29,7 @@ async function findOrCreateAnime(animeData: AnimeData) {
 
   try {
     // Assicuriamoci che year sia un numero valido o defaulti a un valore
-    const year = animeData.year || new Date().getFullYear();
+    const year = animeData?.year || new Date().getFullYear();
 
     const anime = await db.anime.upsert({
       where: {
@@ -39,14 +39,14 @@ async function findOrCreateAnime(animeData: AnimeData) {
         title: animeData.title,
         description: animeData.synopsis || "",
         coverImage: animeData.images?.jpg?.large_image_url || "",
-        year: year, // Aggiunto il campo year
+        year: year,
       },
       create: {
         id: animeId,
         title: animeData.title,
         description: animeData.synopsis || "",
         coverImage: animeData.images?.jpg?.large_image_url || "",
-        year: year, // Aggiunto il campo year
+        year: year,
       },
     });
 
@@ -157,11 +157,13 @@ export async function submitRating(animeData: AnimeData, ratings: RatingData) {
     revalidatePath(`/anime/${animeData.mal_id}`);
     return { data: rating };
   } catch (error) {
-    console.error("Error in submitRating:", error);
+    console.error("Detailed Error in submitRating:", error);
+    console.error("Anime Data:", animeData);
+    console.error("Ratings:", ratings);
     return {
       error:
         error instanceof Error
-          ? error.message
+          ? `Errore specifico: ${error.message}`
           : "Errore nel salvataggio della votazione",
     };
   }
